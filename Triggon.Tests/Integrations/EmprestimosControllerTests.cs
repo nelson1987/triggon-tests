@@ -25,11 +25,11 @@ public class EmprestimosControllerTests : IntegrationTests, IClassFixture<TigerA
     {
         // Arrange
         await KafkaFixture.ConsumeTopicsMessages();
-        Solicitacao todo = _fixture.Build<Solicitacao>()
-            .Create();
-        await MongoDbFixture
-            .Collection<Solicitacao>("warehouseTests", "Solicitacao")
-            .InsertOneAsync(todo, CancellationToken.None);
+        //Solicitacao _solicitacao = _fixture.Build<Solicitacao>()
+        //    .Create();
+        //await MongoDbFixture
+        //    .Collection<Solicitacao>("warehouseTests", "Solicitacao")
+        //    .InsertOneAsync(_solicitacao, CancellationToken.None);
 
         // Act
         var updateFinancialDataAsString = System.Text.Json.JsonSerializer.Serialize(_solicitacao);
@@ -40,10 +40,15 @@ public class EmprestimosControllerTests : IntegrationTests, IClassFixture<TigerA
         //Assert
         var todoCollection = await MongoDbFixture
             .Collection<Solicitacao>("warehouseTests", "Solicitacao")
-            .FindAsync(x => x.Id == todo.Id);
+            .FindAsync(x => x.Conta.Numero == _solicitacao.Conta.Numero);
         Solicitacao todoPersistido = todoCollection.FirstOrDefault();
         Assert.NotNull(todoPersistido);
-        Assert.Equal(todoPersistido.Id, todo.Id);
-        Assert.Equal(todoPersistido.Description, todo.Description);
+        Assert.NotNull(todoPersistido.Id);
+        Assert.NotNull(_solicitacao.Conta.Id);
+        Assert.Equal(todoPersistido.Conta.Numero, _solicitacao.Conta.Numero);
+        Assert.Equal(todoPersistido.Valor, _solicitacao.Valor);
+        //Assert.Equal(todoPersistido.Criacao, _solicitacao.Criacao);
+        Assert.Equal(todoPersistido.Tipo, _solicitacao.Tipo);
+        Assert.NotNull(_solicitacao.Description);
     }
 }
