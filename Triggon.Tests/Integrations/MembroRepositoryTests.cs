@@ -25,7 +25,8 @@ public class RepositoryIntegrationTests
     {
         //Arrange
         var idTodo = _todo.Id;
-        await _sut.InsertAsync(_todo, _token);
+        await MongoDbFixture.Collection<Solicitacao>("warehouseTests", "Solicitacao")
+                            .InsertOneAsync(_todo, _token);
         var todoPersistido = await _sut.FindByIdAsync(idTodo);
         Assert.NotNull(todoPersistido);
         Assert.Equal(todoPersistido.Id, _todo.Id);
@@ -36,7 +37,8 @@ public class RepositoryIntegrationTests
     public async Task GivenTwoTodosValid_InsertInto_Return_DuplicateKeyException()
     {
         //arrange
-        await _sut.InsertAsync(_todo, _token);
+        await MongoDbFixture.Collection<Solicitacao>("warehouseTests", "Solicitacao")
+            .InsertOneAsync(_todo, _token);
         //act
         Func<Task> act = () => _sut.InsertAsync(_todo, _token);
         //assert

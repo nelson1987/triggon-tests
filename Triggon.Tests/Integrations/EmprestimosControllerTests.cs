@@ -25,17 +25,19 @@ public class EmprestimosControllerTests : IntegrationTests, IClassFixture<TigerA
     {
         // Arrange
         await KafkaFixture.ConsumeTopicsMessages();
-
-        Solicitacao todo = _fixture.Build<Solicitacao>().Create();
+        Solicitacao todo = _fixture.Build<Solicitacao>()
+            .Create();
         await MongoDbFixture
             .Collection<Solicitacao>("warehouseTests", "Solicitacao")
             .InsertOneAsync(todo, CancellationToken.None);
 
+        // Act
         var updateFinancialDataAsString = System.Text.Json.JsonSerializer.Serialize(_solicitacao);
         using var stringContent = new StringContent(updateFinancialDataAsString, Encoding.UTF8, "application/json");
-        // Act
         await _tigerApiFixture.Client.PostAsync("/Emprestimos", stringContent);
+        //await _assetsManagerApiFixture.Client.PutAsJsonAsync("/investment-funds/rav/indexes", request);
 
+        //Assert
         var todoCollection = await MongoDbFixture
             .Collection<Solicitacao>("warehouseTests", "Solicitacao")
             .FindAsync(x => x.Id == todo.Id);
@@ -43,12 +45,5 @@ public class EmprestimosControllerTests : IntegrationTests, IClassFixture<TigerA
         Assert.NotNull(todoPersistido);
         Assert.Equal(todoPersistido.Id, todo.Id);
         Assert.Equal(todoPersistido.Description, todo.Description);
-
-        //await MongoDbFixture.Client.Set<Emprestimo>().FirstOrDefaultAsync(assets);
-        //await MongoDbFixture.Client.SaveChangesAsync();
-        // Assert
-        //var indexesInDatabase = await MongoDbFixture.Client
-        //    .Set<RavIndexes>()
-        //    .ToListAsync();
     }
 }
