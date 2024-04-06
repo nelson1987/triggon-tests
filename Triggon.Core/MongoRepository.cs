@@ -1,49 +1,36 @@
-﻿using MongoDB.Driver;
+﻿using System.Linq.Expressions;
+using MongoDB.Driver;
+using Triggon.Core.Contexts;
 using Triggon.Core.Entities;
-using Triggon.Core.Entities.Bases;
 using Triggon.Core.Repositories;
 
 namespace Triggon.Core;
-public abstract class MongoRepository<T> : IMongoRepository<T> where T : EntityBase
+public class SolicitacaoRepository : IMongoRepository<Solicitacao>
 {
-    public IMongoCollection<T> Collection { get; }
+    private readonly IMyApplicationContext _context;
 
-    public MongoRepository(IMongoContext mongoDbContext, string collection)
+    public SolicitacaoRepository(IMyApplicationContext context)
     {
-        Collection = mongoDbContext.Database.GetCollection<T>(collection);
+        _context = context;
     }
 
-    public async Task InsertAsync(T entity, CancellationToken cancellationToken = default)
-    {
-        await Collection.InsertOneAsync(entity, cancellationToken);
-    }
-
-    public async Task<T?> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        return await Collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
-    }
-
-    public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(Solicitacao entity, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
-}
 
-public class SolicitacaoRepository : MongoRepository<Solicitacao>, ISolicitacaoRepository
-{
-    public SolicitacaoRepository(IMongoContext mongoDbContext) : base(mongoDbContext, "Solicitacao")
+    public async Task InsertAsync(Solicitacao entity, CancellationToken cancellationToken = default)
     {
+        await _context.Solicitations.InsertOneAsync(entity, cancellationToken);
     }
-}
 
-public class MongoContext : IMongoContext
-{
-    public IMongoDatabase Database { get; }
-    public MongoContext()
+    public async Task<Solicitacao?> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var connectionString = "mongodb://root:password@localhost:27017/";
-        MongoClient Context = new MongoClient(connectionString);
-        Database = Context
-            .GetDatabase("warehouseTests");
+        return await _context.Solicitations.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<IEnumerable<Solicitacao>> FindByFilterAsync(Expression<Func<Solicitacao, bool>> filterExpression, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }

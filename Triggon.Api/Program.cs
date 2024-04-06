@@ -3,8 +3,7 @@ using Triggon.Api;
 using Triggon.Core.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddRepository()
-                .AddMongoUoW();
+builder.Services.AddRepository();
 //Adicionar HTTPCLIENT
 builder.Services.AddHttpClient("Github", client =>
 {

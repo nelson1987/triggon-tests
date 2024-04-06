@@ -29,7 +29,7 @@ public class Emprestimo
         if (solicitacaoCommand.Valor <= 0) throw new TriggonException("Valor Inválido");
         if (!await _contratoApi.Autorizar(solicitacaoCommand.Conta.ToEntity(), cancellationToken)) throw new TriggonException("Não Autorizado");
         await _controladoriaApi.Salvar(solicitacaoCommand, cancellationToken);
-        //var membro = await _mongoRepository.FindByIdAsync(Guid.NewGuid());
+        //var membro = await _mongoRepository.FindByFilterAsync(Guid.NewGuid());
         //membro.Description = "";
         //await _mongoRepository.UpdateAsync(membro);
 

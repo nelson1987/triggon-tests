@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 using Triggon.Core.Contexts;
 using Triggon.Core.Entities;
 using Triggon.Core.Features;
@@ -20,15 +19,15 @@ public class EmprestimosController : ControllerBase
     }
 
     [HttpGet("/teste")]
-    public async Task<IActionResult> SomeAction([FromServices] IMyApplicationContext _context, CancellationToken cancellationToken)
+    public async Task<IActionResult> SomeAction([FromServices] IMongoRepository<Usuario> _context, CancellationToken cancellationToken)
     {
-        return Ok(await _context.Users.Find(x => x.Id != Guid.Empty).ToListAsync(cancellationToken));
+        return Ok(await _context.FindByFilterAsync(x => x.Id != Guid.Empty,cancellationToken));
     }
 
     [HttpPost("/teste")]
-    public async Task<IActionResult> SomeActionPost([FromServices] IMyApplicationContext _context, CancellationToken cancellationToken)
+    public async Task<IActionResult> SomeActionPost([FromServices] IMongoRepository<Usuario> _context, CancellationToken cancellationToken)
     {
-        await _context.Users.InsertOneAsync(new Usuario() { Id = Guid.NewGuid() }, cancellationToken);
+        await _context.InsertAsync(new Usuario() { Id = Guid.NewGuid() }, cancellationToken);
         return Created();
     }
 

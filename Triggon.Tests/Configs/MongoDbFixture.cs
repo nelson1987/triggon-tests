@@ -1,5 +1,7 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using Triggon.Core;
+using Triggon.Core.Contexts;
 using Triggon.Core.Repositories;
 
 namespace Triggon.Tests.Configs;
@@ -32,12 +34,16 @@ public static class MongoDbFixture
     public static IMongoCollection<T> Collection<T>(string database,
         string collection) where T : class
     {
-        return Client
-            .GetDatabase(database)
+        return Context()
+            .GetGenericDatabase()
             .GetCollection<T>(collection);
     }
-    public static IMongoContext Context()
+    public static IMyApplicationContext Context()
     {
-        return new MongoContext();
+        return new MyApplicationContext(new MyApplicationContextOptions()
+        {
+            ConnectionString = "mongodb://root:password@localhost:27017/",
+            DatabaseName = "warehouseTests"
+        });
     }
 }
