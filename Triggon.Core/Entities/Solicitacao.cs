@@ -2,7 +2,7 @@
 
 namespace Triggon.Core.Entities;
 
-public class Solicitacao : EntityBase
+public class Solicitacao : MongoEntiyBase
 {
     public Conta Conta { get; set; }
     public decimal Valor { get; set; }

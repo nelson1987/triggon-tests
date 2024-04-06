@@ -3,6 +3,7 @@ using Triggon.Core.Contexts;
 using Triggon.Core.Entities;
 using Triggon.Core.Features;
 using Triggon.Core.Repositories;
+using Triggon.Infrastructure.Mongo;
 
 namespace Triggon.Api.Controllers;
 [ApiController]
@@ -10,7 +11,7 @@ namespace Triggon.Api.Controllers;
 public class EmprestimosController : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult> Post([FromServices] IMongoRepository<Solicitacao> repository,
+    public async Task<ActionResult> Post([FromServices] IGenericRepository<Solicitacao> repository,
         [FromBody] SolicitacaoCommand solicitacao
         , CancellationToken cancellationToken)
     {
@@ -19,15 +20,18 @@ public class EmprestimosController : ControllerBase
     }
 
     [HttpGet("/teste")]
-    public async Task<IActionResult> SomeAction([FromServices] IMongoRepository<Usuario> _context, CancellationToken cancellationToken)
+    public async Task<IActionResult> SomeAction([FromServices] IGenericRepository<Customer> _repository, CancellationToken cancellationToken)
     {
-        return Ok(await _context.FindByFilterAsync(x => x.Id != Guid.Empty,cancellationToken));
+        return Ok(await _repository.GetAll());
     }
 
     [HttpPost("/teste")]
-    public async Task<IActionResult> SomeActionPost([FromServices] IMongoRepository<Usuario> _context, CancellationToken cancellationToken)
+    public async Task<IActionResult> SomeActionPost([FromServices] IGenericRepository<Customer> unitOfWork, CancellationToken cancellationToken)
     {
-        await _context.InsertAsync(new Usuario() { Id = Guid.NewGuid() }, cancellationToken);
+        await unitOfWork.InsertAsync(new Customer() { Name = "Name", Order = "Order" }, cancellationToken);
+        //SolicitacaoCommand solicitacao = new SolicitacaoCommand(new ContaCommand("Numero"),10.00M, DateTime.Now, TipoSolicitacao.Emprestimo);
+        //await unitOfWork.DepartmentRepository.InsertAsync(solicitacao.ToEntity(), cancellationToken);
+        //await unitOfWork.SaveAsync();
         return Created();
     }
 

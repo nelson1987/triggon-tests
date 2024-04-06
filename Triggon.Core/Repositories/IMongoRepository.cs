@@ -1,6 +1,5 @@
 ﻿using MongoDB.Driver;
 using System.Linq.Expressions;
-using Triggon.Core.Entities;
 using Triggon.Core.Entities.Bases;
 
 namespace Triggon.Core.Repositories;
@@ -14,9 +13,9 @@ public interface IMongoRepository<T> where T : EntityBase
         Expression<Func<T, bool>> filterExpression, CancellationToken cancellationToken = default);
 }
 
-public interface ISolicitacaoRepository : IMongoRepository<Solicitacao>
-{
-}
+//public interface ISolicitacaoRepository : IMongoRepository<Solicitacao>
+//{
+//}
 
 public interface IMongoContext
 {

@@ -9,10 +9,14 @@
 	<ItemGroup>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="2.1.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.17" />
+		<PackageReference Include="MongoDB.EntityFrameworkCore" Version="7.0.0-preview.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Triggon.Core\Triggon.Core.csproj" />
+	  <ProjectReference Include="..\Triggon.Infrastructure.Mongo\Triggon.Infrastructure.Mongo.csproj" />
 	</ItemGroup>
 
 </Project>

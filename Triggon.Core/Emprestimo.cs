@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Triggon.Core.Entities;
 using Triggon.Core.Features;
-using Triggon.Core.Repositories;
+using Triggon.Core.Handlers;
 using Triggon.Core.Services;
 
 namespace Triggon.Core;
@@ -10,11 +10,11 @@ public class Emprestimo
     private readonly IContratoApi _contratoApi;
     private readonly IControladoriaApi _controladoriaApi;
     private readonly ITesourariaApi _tesourariaApi;
-    private readonly IMongoRepository<Solicitacao> _mongoRepository;
+    private readonly IGenericRepository<Solicitacao> _mongoRepository;
     public Emprestimo(IContratoApi contratoApi,
         IControladoriaApi controladoriaApi,
         ITesourariaApi tesourariaApi,
-        IMongoRepository<Solicitacao> mongoRepository)
+        IGenericRepository<Solicitacao> mongoRepository)
     {
         _contratoApi = contratoApi;
         _controladoriaApi = controladoriaApi;

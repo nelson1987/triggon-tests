@@ -15,7 +15,7 @@ public static class Dependencies
         });
         services.AddScoped<IMyApplicationContext, MyApplicationContext>();
         services.AddScoped<IMongoRepository<Usuario>, UserRepository>();
-        services.AddScoped<IMongoRepository<Solicitacao>, SolicitacaoRepository>();
+        //services.AddScoped<IMongoRepository<Solicitacao>, SolicitacaoRepository>();
         return services;
     }
 }

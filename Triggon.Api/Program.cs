@@ -1,9 +1,10 @@
 using Polly;
 using Triggon.Api;
-using Triggon.Core.Contexts;
+using Triggon.Infrastructure.Mongo;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddRepository();
+builder.Services.AddRepository()
+                .AddInsfrastructure();
 //Adicionar HTTPCLIENT
 builder.Services.AddHttpClient("Github", client =>
 {
