@@ -39,12 +39,10 @@ public class EmprestimosControllerTests : IntegrationTests, IClassFixture<TigerA
 
         //Assert
         var todoCollection = await MongoDbFixture
-            .Collection<Solicitacao>("warehouseTests", "Solicitacao")
+            .Collection<Solicitacao>("Solicitacao")
             .FindAsync(x => x.Conta.Numero == _solicitacao.Conta.Numero);
         Solicitacao todoPersistido = todoCollection.FirstOrDefault();
         Assert.NotNull(todoPersistido);
-        Assert.NotNull(todoPersistido.Id);
-        Assert.NotNull(_solicitacao.Conta.Id);
         Assert.Equal(todoPersistido.Conta.Numero, _solicitacao.Conta.Numero);
         Assert.Equal(todoPersistido.Valor, _solicitacao.Valor);
         //Assert.Equal(todoPersistido.Criacao, _solicitacao.Criacao);

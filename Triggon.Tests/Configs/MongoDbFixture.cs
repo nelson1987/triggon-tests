@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
-using Triggon.Core;
 using Triggon.Core.Contexts;
-using Triggon.Core.Repositories;
+using Triggon.Infrastructure.Mongo;
 
 namespace Triggon.Tests.Configs;
 public static class MongoDbFixture
@@ -31,8 +30,7 @@ public static class MongoDbFixture
         }
     }
 
-    public static IMongoCollection<T> Collection<T>(string database,
-        string collection) where T : class
+    public static IMongoCollection<T> Collection<T>(string collection) where T : class
     {
         return Context()
             .GetGenericDatabase()
@@ -46,4 +44,21 @@ public static class MongoDbFixture
             DatabaseName = "warehouseTests"
         });
     }
+    public static ApplicationDbContext ApplicationDbContext()
+    {
+        DbContextOptionsBuilder opt = new DbContextOptionsBuilder();
+        opt
+                        .EnableSensitiveDataLogging()
+                        .UseMongoDB("mongodb://root:password@localhost:27017/", "warehouseTests");
+
+        return new ApplicationDbContext(opt.Options);
+    }
+    /*
+     ApplicationDbContext>(opt =>
+        {
+            opt
+                .EnableSensitiveDataLogging()
+                .UseMongoDB("mongodb://root:password@localhost:27017/", "warehouseTests");
+        });
+     */
 }
