@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Triggon.Core.Contexts;
 using Triggon.Core.Entities;
 using Triggon.Core.Features;
-using Triggon.Core.Repositories;
 using Triggon.Infrastructure.Mongo;
 
 namespace Triggon.Api.Controllers;
@@ -20,7 +18,7 @@ public class EmprestimosController : ControllerBase
     }
 
     [HttpGet("/teste")]
-    public async Task<IActionResult> SomeAction([FromServices] IGenericRepository<Customer> _repository, CancellationToken cancellationToken)
+    public async Task<IActionResult> SomeAction([FromServices] IGenericRepository<Customer> _repository)//, CancellationToken cancellationToken)
     {
         return Ok(await _repository.GetAll());
     }
