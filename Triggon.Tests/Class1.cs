@@ -13,7 +13,7 @@ public class MongoDbOptions
     public required string Database { get; set; }
 }
 
-public static class Producer
+public static class Dependencies
 {
     public static IServiceCollection AddContext(this IServiceCollection services)
     {
@@ -27,6 +27,11 @@ public static class Producer
             x.Database = "";
         });
         services.AddScoped<IMongoGenericContext, MongoGenericContext>();
+        services.AddScoped<IGenericRepository<Aluno>, AlunoGenericRepository>();
+        services.AddScoped<IGenericRepository<Materia>, MateriaGenericRepository>();
+
+        services.AddScoped<IGenericProducer<AlunoMatriculadoEvent>, MateriaGenericRepository>();
+
         return services;
     }
     /*
@@ -52,6 +57,7 @@ builder.Services.Configure<PositionOptions>(
      
      */
 }
+
 public interface IMongoGenericContext
 {
     IMongoDatabase GetDatabase();
@@ -60,7 +66,7 @@ public class MongoGenericContext : IMongoGenericContext
 {
     private readonly MongoDbOptions _options;
     private readonly IMongoDatabase _database;
-
+    //public IMongoCollection<Aluno> aluno => _database.GetCollection<Aluno>("Aluno");
     public MongoGenericContext(IOptions<MongoDbOptions> options)
     {
         _options = options.Value;
@@ -81,6 +87,37 @@ public interface IGenericRepository<TEntity> where TEntity : AuditableEntity
 {
     Task CreateAsync(TEntity entity);
 }
+public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : AuditableEntity
+{
+    private readonly IMongoGenericContext _context;
+    private readonly IMongoCollection<TEntity> _collection;
+
+    protected GenericRepository(IMongoGenericContext context, string collectionName)
+    {
+        _context = context;
+        _collection = _context.GetDatabase().GetCollection<TEntity>(collectionName);
+    }
+
+    public Task CreateAsync(TEntity entity)
+    {
+        _collection.InsertOne(entity);
+        throw new NotImplementedException();
+    }
+}
+public interface IAlunoGenericRepository : IGenericRepository<Aluno> { }
+public class AlunoGenericRepository : GenericRepository<Aluno>, IAlunoGenericRepository
+{
+    public AlunoGenericRepository(IMongoGenericContext context) : base(context, "Alunos")
+    {
+    }
+}
+public interface IMateriaGenericRepository : IGenericRepository<Materia> { }
+public class MateriaGenericRepository : GenericRepository<Materia>, IMateriaGenericRepository
+{
+    public MateriaGenericRepository(IMongoGenericContext context, string collectionName) : base(context, collectionName)
+    {
+    }
+}
 public interface IUnitOfWork
 {
     IGenericRepository<Aluno> Alunos { get; }
@@ -92,6 +129,27 @@ public interface IGenericProducer<TEvent> where TEvent : AuditableEvent
 {
     Task Publish(TEvent @event);
 }
+public abstract class GenericProducer<TEvent> : IGenericProducer<TEvent> where TEvent : AuditableEvent
+{
+    private readonly RabbitMqOptions _options;
+    public GenericProducer(IOptions<RabbitMqOptions> options)
+    {
+        _options = options.Value;
+    }
+    public Task Publish(TEvent @event)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public interface IAlunoMatriculadoProducer : IGenericProducer<AlunoMatriculadoEvent> { }
+public class AlunoMatriculadoProducer : GenericProducer<AlunoMatriculadoEvent>, IAlunoMatriculadoProducer
+{
+    public AlunoMatriculadoProducer(IOptions<RabbitMqOptions> options) : base(options)
+    {
+    }
+}
+
 public interface IGenericConsumer<TEvent> where TEvent : AuditableEvent
 {
     Task Subscribe();
