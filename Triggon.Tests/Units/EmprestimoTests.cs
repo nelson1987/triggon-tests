@@ -92,7 +92,7 @@ public class EmprestimoTests
         Func<Task> act = () => _sut.Solicitar(solicitacao, token);
         //assert
         TriggonException exception = await Assert.ThrowsAsync<TriggonException>(act);
-        Assert.Equal("Valor Inválido", exception.Message);
+        Assert.Equal("Price Inválido", exception.Message);
     }
 
     [Fact]

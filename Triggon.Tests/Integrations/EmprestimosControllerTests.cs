@@ -7,7 +7,7 @@ using Triggon.Tests.Configs;
 
 namespace Triggon.Tests.Integrations;
 
-public class EmprestimosControllerTests : IntegrationTests, IClassFixture<TigerApiFixture>
+public class EmprestimosControllerTests : Configs.IntegrationTests, IClassFixture<TigerApiFixture>
 {
     private readonly IFixture _fixture = new Fixture().Customize(new AutoMoqCustomization());
     private readonly TigerApiFixture _tigerApiFixture;

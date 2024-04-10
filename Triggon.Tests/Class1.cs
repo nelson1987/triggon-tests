@@ -30,7 +30,7 @@ public static class Dependencies
         services.AddScoped<IGenericRepository<Aluno>, AlunoGenericRepository>();
         services.AddScoped<IGenericRepository<Materia>, MateriaGenericRepository>();
 
-        services.AddScoped<IGenericProducer<AlunoMatriculadoEvent>, MateriaGenericRepository>();
+        //services.AddScoped<IGenericProducer<AlunoMatriculadoEvent>, MateriaGenericRepository>();
 
         return services;
     }
